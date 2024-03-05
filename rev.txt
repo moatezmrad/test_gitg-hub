@@ -1,0 +1,50 @@
+<?php
+include("client.php");
+
+$cl = new Client();
+$res = $cl->liste();
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["deleteSelected"])) {
+
+    $selectedClientId = $_POST["r"];
+    $cl->delete($selectedClientId);
+    header("Location: listeclient.php?rand=" . time());
+    exit();
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des clients</title>
+</head>
+<body>
+    <h2>Liste des clients</h2>
+
+    <form action="" method="POST">
+        <table border="1">
+            <tr>
+                <th>idClient</th>
+                <th>ncin</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>telephone</th>
+            </tr>
+
+            <?php
+            while ($row = $res->fetch(PDO::FETCH_ASSOC)) {
+                echo "<tr>";
+                echo "<td><input type='radio' name='r' value='" . $row['idClient'] . "'></td>";
+                echo "<td>" . $row['ncin'] . "</td>";
+                echo "<td>" . $row['nom'] . "</td>";
+                echo "<td>" . $row['prenom'] . "</td>";
+                echo "<td>" . $row['telephone'] . "</td>";
+                echo "</tr>";
+            }
+            ?>
+        </table>
+
+        <input type="submit" name="deleteSelected" value="supprimer ">
+    </form>
+</body>
+</html>

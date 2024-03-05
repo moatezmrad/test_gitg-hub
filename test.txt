@@ -1,0 +1,91 @@
+# 1. Créer une base de données SQLite vide et se connecter
+import sqlite3
+
+conn = sqlite3.connect('mydatabase.db')
+cursor = conn.cursor()
+
+# 2. Créer une table "users"
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY,
+        username TEXT,
+        password TEXT
+    )
+''')
+
+# 3. Insérer des données dans la table "users"
+cursor.execute("INSERT INTO users (username, password) VALUES ('mehdi', 'password123')")
+cursor.execute("INSERT INTO users (username, password) VALUES ('john', 'securepass')")
+
+# 4. Afficher tous les enregistrements de la table "users"
+cursor.execute("SELECT * FROM users")
+print("Tous les enregistrements de la table 'users':")
+print(cursor.fetchall())
+
+# 5. Afficher les enregistrements de la table "users" pour le nom d'utilisateur 'mehdi'
+cursor.execute("SELECT * FROM users WHERE username='mehdi'")
+print("Enregistrements de la table 'users' pour le nom d'utilisateur 'mehdi':")
+print(cursor.fetchall())
+
+# 6. Mettre à jour le mot de passe de l'utilisateur dont l'ID est 1
+cursor.execute("UPDATE users SET password='newpassword' WHERE id=1")
+
+# 7. Supprimer l'utilisateur dont l'ID est 2
+cursor.execute("DELETE FROM users WHERE id=2")
+
+# 8. Créer une autre table "posts"
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS posts (
+        id INTEGER PRIMARY KEY,
+        user_id INTEGER,
+        content TEXT
+    )
+''')
+
+# 9. Insérer des données dans la table "posts"
+cursor.execute("INSERT INTO posts (user_id, content) VALUES (1, 'Post 1')")
+cursor.execute("INSERT INTO posts (user_id, content) VALUES (1, 'Post 2')")
+cursor.execute("INSERT INTO posts (user_id, content) VALUES (2, 'Post 3')")
+
+# 10. Afficher tous les enregistrements de la table "posts" liés à l'utilisateur dont l'ID est 1
+cursor.execute("SELECT * FROM posts WHERE user_id=1")
+print("Enregistrements de la table 'posts' liés à l'utilisateur dont l'ID est 1:")
+print(cursor.fetchall())
+
+# Valider les changements et fermer la connexion
+conn.commit()
+conn.close()
+**************************************************************************************************
+donnees_etudiants = {
+    'student1': {'Nom': 'Najib', 'Age': 22, 'Moyenne': 16.5},
+    'student2': {'Nom': 'Walid', 'Age': 21, 'Moyenne': 15.8},
+    'student3': {'Nom': 'Sofia', 'Age': 23, 'Moyenne': 17.2},
+    'student4': {'Nom': 'David', 'Age': 20, 'Moyenne': 14.9},
+    'student5': {'Nom': 'Khalid', 'Age': 22, 'Moyenne': 16.8}
+}
+
+for student, data in donnees_etudiants.items():
+    filename = f"{student}.txt"
+    with open(filename, 'w') as file:
+        file.write(f"Nom: {data['Nom']}\nAge: {data['Age']}\nMoyenne: {data['Moyenne']}")
+***************************************************************************************************
+def generer_occurrences_voyelles(fichier):
+    occurrences_voyelles = {}
+
+    with open(fichier, 'r', encoding='utf-8') as file:
+        contenu = file.read().lower()  # Convertir en minuscules pour la casse insensible
+
+        for mot in contenu.split():
+            for lettre in mot:
+                if lettre in 'aeiouy':
+                    occurrences_voyelles[lettre] = occurrences_voyelles.get(lettre, 0) + 1
+
+    return occurrences_voyelles
+
+# Utilisation du programme avec un fichier texte T.txt
+fichier_T = 'T.txt'
+resultat_occurrences = generer_occurrences_voyelles(fichier_T)
+
+print("Occurrences des voyelles dans le fichier T:")
+for voyelle, occurrence in resultat_occurrences.items():
+    print(f"{voyelle}: {occurrence}")
